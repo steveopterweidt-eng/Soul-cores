@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soul cores f&uuml;r die Fantastic Four</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Soul cores f&uuml;r die Fantastic Four</h1>
+      <button id="csv-open-button" type="button" class="header-action">CSV Import</button>
+      <div id="sync-status" class="sync-status" role="status" aria-live="polite"></div>
+    </header>
+
+    <main>
+      <div id="library-column">
+        <section aria-labelledby="library-heading" id="creature-library">
+          <div class="section-header">
+            <h2 id="library-heading">Fantastic Four Bestiarium</h2>
+            <div class="library-controls">
+              <form id="add-core-form" aria-label="Preis eintragen" novalidate>
+                <div class="search-control">
+                  <label class="visually-hidden" for="creature-search">
+                    Monster suchen
+                  </label>
+                  <input
+                    id="creature-search"
+                    type="search"
+                    placeholder="Monster suchen"
+                    aria-label="Monster suchen"
+                  />
+                </div>
+                <input id="core-name" name="coreName" type="hidden" />
+
+                <label for="core-price">Preis (Gesamt)</label>
+                <input
+                  id="core-price"
+                  name="corePrice"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  placeholder="z.B. 700.000"
+                  required
+                />
+
+                <div
+                  id="form-feedback"
+                  class="form-feedback"
+                  role="status"
+                  aria-live="polite"
+                ></div>
+
+                <button type="submit">Hinzuf&uuml;gen</button>
+              </form>
+            </div>
+          </div>
+          <div id="creature-grid" role="list" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <section aria-labelledby="core-list-heading" id="core-list">
+        <h2 id="core-list-heading">Soul cores to do / stehen bereit</h2>
+        <div class="core-summary" id="core-summary" hidden>
+          <div class="core-summary-line">
+            <span class="core-summary-label">Gesamtpreis</span>
+            <span class="core-summary-value" id="core-total-sum">0&nbsp;&euro;</span>
+          </div>
+          <div class="core-summary-line">
+            <span class="core-summary-label">Gesamt /5</span>
+            <span class="core-summary-value" id="core-total-unit">0&nbsp;&euro;</span>
+          </div>
+        </div>
+        <div
+          id="core-list-container"
+          class="core-list-container"
+          aria-live="polite"
+        >
+          <p class="empty-state">Noch keine Soul cores eingetragen.</p>
+        </div>
+
+                      <form
+                        id="custom-creature-form"
+                        class="custom-creature-form"
+                        aria-label="Eigenes Monster hinzufuegen"
+                        novalidate
+                      >
+                        <h3>Eigenes Monster</h3>
+                        <label for="custom-creature-name">Name</label>
+                        <input
+                          id="custom-creature-name"
+                          name="customCreatureName"
+                          type="text"
+                          autocomplete="off"
+                          placeholder="z.B. Custom Beast"
+                          required
+                        />
+
+                        <label for="custom-creature-icon">Icon URL (optional)</label>
+                        <input
+                          id="custom-creature-icon"
+                          name="customCreatureIcon"
+                          type="url"
+                          autocomplete="off"
+                          placeholder="https://...gif"
+                        />
+
+                        <div
+                          id="custom-creature-feedback"
+                          class="form-feedback"
+                          role="status"
+                          aria-live="polite"
+                        ></div>
+
+                        <button type="submit">Monster speichern</button>
+                      </form>
+      </section>
+
+      <section aria-labelledby="completed-list-heading" id="completed-list">
+        <div class="section-header completed-list-header">
+          <h2 id="completed-list-heading">Fertige Soul cores</h2>
+          <div class="completed-controls">
+            <div class="search-control">
+              <label class="visually-hidden" for="completed-search">
+                In fertigen Soul cores suchen
+              </label>
+              <input
+                id="completed-search"
+                type="search"
+                placeholder="In fertigen Soul cores suchen..."
+                aria-label="In fertigen Soul cores suchen"
+              />
+            </div>
+            <button type="button" id="completed-toggle" aria-pressed="true">
+              Nur Icons
+            </button>
+          </div>
+        </div>
+        <div class="core-summary" id="completed-summary" hidden>
+          <div class="core-summary-line">
+            <span class="core-summary-label">Gesamtpreis</span>
+            <span class="core-summary-value" id="completed-total-sum">0&nbsp;&euro;</span>
+          </div>
+          <div class="core-summary-line">
+            <span class="core-summary-label">Gesamt /5</span>
+            <span class="core-summary-value" id="completed-total-unit">0&nbsp;&euro;</span>
+          </div>
+          <div class="core-summary-line">
+            <span class="core-summary-label">Solo Gesamt</span>
+            <span class="core-summary-value" id="completed-solo-sum">0&nbsp;&euro;</span>
+          </div>
+        </div>
+        <div
+          id="completed-list-container"
+          class="core-list-container"
+          aria-live="polite"
+        >
+          <p class="empty-state">Noch keine Soul cores abgeschlossen.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="import-modal" class="modal" hidden>
+      <div class="modal-backdrop"></div>
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="import-modal-title">
+        <div class="modal-header">
+          <h2 id="import-modal-title">CSV Import</h2>
+          <button type="button" id="csv-close-button" class="modal-close" aria-label="Fenster schliessen">&times;</button>
+        </div>
+        <form id="csv-load-form" class="csv-load-form" novalidate>
+          <p class="csv-hint">
+            Spalten: Index(optional); Name; Preis; Tag(optional S/A). Trennzeichen , ; Tab.
+          </p>
+          <input
+            id="csv-file-input"
+            name="csvFile"
+            type="file"
+            accept=".csv,text/csv"
+          />
+          <div
+            id="csv-import-feedback"
+            class="form-feedback"
+            role="status"
+            aria-live="polite"
+          ></div>
+          <div class="modal-actions">
+            <button type="submit">Datei laden</button>
+          </div>
+        </form>
+
+        <div id="csv-preview" class="csv-preview" aria-live="polite"></div>
+
+        <div class="modal-actions modal-actions-end">
+          <button type="button" id="csv-apply-button" disabled>Uebernehmen</button>
+        </div>
+      </div>
+    </div>
+    
+    <script src="creatures.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
